@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Futebol Ao Vivo</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<style>
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100%;
+  background: #111;
+  color: #fff;
+}
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+.sidebar {
+  width: 200px;
+  background: #222;
+  padding: 10px;
+  overflow-y: auto;
+}
+.sidebar h2 {
+  color: #e50914;
+  margin-top: 0;
+  font-size: 18px;
+  text-align: center;
+}
+.game-btn {
+  display: block;
+  padding: 8px;
+  margin: 8px 0;
+  background: #333;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+.game-btn:hover {
+  background: #e50914;
+  color: #fff;
+}
+.player-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  position: relative;
+}
+video {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: #000;
+}
+
+/* Mobile ajusta a largura da sidebar, mantém horizontal */
+@media(max-width: 768px){
+  .sidebar {
+    width: 120px;
+    padding: 5px;
+  }
+  .sidebar h2 {
+    font-size: 16px;
+  }
+  .game-btn {
+    padding: 6px;
+    margin: 5px 0;
+    font-size: 14px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="sidebar">
+    <h2>Jogos / Canais</h2>
+    <button class="game-btn" onclick="playGame('https://rnw-rn-soultv.otteravision.com/rnw/rn/rnw_rn.m3u8')">Real Madrid x Olympique de Marseille</button>
+    <button class="game-btn" onclick="playGame('https://streaming.cloudecast.com/hls/joyflix/index.m3u8')">Banqueta</button>
+    <button class="game-btn" onclick="playGame('http://kobe.kaseline.shop:2095/live5/sbt/chunks.m3u8?token=1758105166_a7978d94b4ed791d2536875941c04ecd19aa7c8a')">Outro Jogo Teste</button>
+  </div>
+
+  <div class="player-container">
+    <video id="videoPlayer" controls></video>
+  </div>
+</div>
+
+<script>
+const video = document.getElementById('videoPlayer');
+let hls;
+
+function playGame(url){
+  if(hls) hls.destroy();
+  if(Hls.isSupported()){
+    hls = new Hls();
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.ERROR, function (event, data) {
+      console.error("Erro HLS:", data);
+      alert("Erro ao carregar vídeo: " + data.details);
+    });
+  } else if(video.canPlayType('application/vnd.apple.mpegurl')){
+    video.src = url;
+    video.play();
+  } else {
+    alert('Seu navegador não suporta este vídeo.');
+  }
+}
+</script>
+
+</body>
+</html>
